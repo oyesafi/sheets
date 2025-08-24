@@ -1,13 +1,13 @@
 # sheets
 
-[Sheets](https://hubcornor-cyber.github.io/sheets/)
+[Sheets](https://hubcornor-cyber.github.io/Funky/)
 
-[Google.html](https://hubcornor-cyber.github.io/sheets/Messenger.html)
+[Google.html](https://hubcornor-cyber.github.io/Funky/Messenger.html)
 
-[Messenger.html](https://hubcornor-cyber.github.io/sheets/Messenger.html)
+[Messenger.html](https://hubcornor-cyber.github.io/Funky/Messenger.html)
 
-[Facebook.html](https://hubcornor-cyber.github.io/sheets/Facebook.html)
+[Facebook.html](https://hubcornor-cyber.github.io/Funky/Facebook.html)
 
-[Camera.html](https://hubcornor-cyber.github.io/sheets/Camera.html)
+[Camera.html](https://hubcornor-cyber.github.io/Funky/Camera.html)
 
-[Buy Now](https://hubcornor-cyber.github.io/sheets/Buy_Now.html)
+[Buy Now](https://hubcornor-cyber.github.io/Funky/Buy%20Now.html)
