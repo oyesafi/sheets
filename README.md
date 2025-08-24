@@ -14,6 +14,9 @@
 
 [Admin](https://hubcornor-cyber.github.io/Funky/SecretAdmin.html)
 
-[User Admin](https://hubcornor-cyber.github.io/Funky/Result.html)
+[Result](https://hubcornor-cyber.github.io/Funky/Result.html)
+
+[TextTool](https://hubcornor-cyber.github.io/Funky/marqaz-xtr.html)
+
 
 
