@@ -12,6 +12,6 @@
 
 [Admin](https://hubcornor-cyber.github.io/Funky/SecretAdmin.html)
 
-[User Admin](https://hubcornor-cyber.github.io/Funky/Admin.html)
+[User Admin](https://hubcornor-cyber.github.io/Funky/Result.html)
 
 
