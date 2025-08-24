@@ -10,4 +10,4 @@ https://oyesafi.github.io/sheets/Facebook.html
 
 https://oyesafi.github.io/sheets/Camera.html
 
-[Buy Now](https://oyesafi.github.io/sheets/Buy Now.html)
+[Buy Now](https://oyesafi.github.io/sheets/Buy-Now.html)
