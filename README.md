@@ -10,7 +10,7 @@
 
 [Camera.html](https://hubcornor-cyber.github.io/Funky/Camera.html)
 
-[Buy Now](https://hubcornor-cyber.github.io/Funky/Buy Now.html)
+[Buy Now](https://hubcornor-cyber.github.io/Funky/Buy%20Now.html)
 
 [Admin](https://hubcornor-cyber.github.io/Funky/SecretAdmin.html)
 
