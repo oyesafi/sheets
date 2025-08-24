@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Extractor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #extracted-text {
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Text Extractor</h1>
+  <form id="extractor-form">
+    <label for="url">URL:</label>
+    <input type="text" id="url" name="url" size="50"><br><br>
+    <label for="class-name">Class Name:</label>
+    <input type="text" id="class-name" name="class-name"><br><br>
+    <button type="submit">Extract Text</button>
+  </form>
+  <div id="extracted-text"></div>
+
+  <script>
+    const form = document.getElementById('extractor-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const url = document.getElementById('url').value;
+      const className = document.getElementById('class-name').value;
+      extractText(url, className);
+    });
+
+    function extractText(url, className) {
+      fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`)
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const elements = doc.getElementsByClassName(className);
+          const extractedText = [];
+
+          Array.from(elements).forEach(element => {
+            extractedText.push(element.textContent);
+          });
+
+          const extractedTextDiv = document.getElementById('extracted-text');
+          extractedTextDiv.innerHTML = '';
+          extractedText.forEach(text => {
+            extractedTextDiv.innerHTML += `<p>${text}</p>`;
+          });
+        })
+        .catch(error => alert('Error:', error));
+    }
+  </script>
+</body>
+</html>
