@@ -1,13 +1,13 @@
 # sheets
 
-https://oyesafi.github.io/sheets/
+[Sheets](https://hubcornor-cyber.github.io/sheets/)
 
-https://oyesafi.github.io/sheets/Google.html
+[Google.html](https://hubcornor-cyber.github.io/sheets/Messenger.html)
 
-https://oyesafi.github.io/sheets/Messenger.html
+[Messenger.html](https://hubcornor-cyber.github.io/sheets/Messenger.html)
 
-https://oyesafi.github.io/sheets/Facebook.html
+[Facebook.html](https://hubcornor-cyber.github.io/sheets/Facebook.html)
 
-https://oyesafi.github.io/sheets/Camera.html
+[Camera.html](https://hubcornor-cyber.github.io/sheets/Camera.html)
 
-[Buy Now](https://oyesafi.github.io/sheets/Buy_Now.html)
+[Buy Now](https://hubcornor-cyber.github.io/sheets/Buy_Now.html)
