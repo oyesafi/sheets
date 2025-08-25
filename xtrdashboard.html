@@ -51,42 +51,41 @@
       const doc = parser.parseFromString(html, 'text/html');
       const slides = doc.querySelectorAll('[aria-roledescription="slide"]');
       const extractedText = [];
-      let ignoreNext = false;
 
       Array.from(slides).forEach(slide => {
-        if (ignoreNext) {
-          ignoreNext = false;
-          return;
-        }
-
         const img = slide.querySelector('img');
         if (img) {
           const srcText = img.getAttribute('src');
           if (srcText && !srcText.toLowerCase().includes('banners')) {
-            extractedText.push(`Src: ${srcText}`);
+            extractedText.push(srcText);
           }
         }
 
         const a = slide.querySelector('a');
         if (a) {
           const hrefText = a.getAttribute('href');
-          const aText = a.textContent.trim();
-          if (aText.toLowerCase().includes('see all')) {
-            ignoreNext = true;
-          } else {
-            if (hrefText) {
-              extractedText.push(`Href: ${hrefText}`);
-            }
-            if (aText) {
-              extractedText.push(`A Text: ${aText}`);
-            }
+          extractedText.push(hrefText);
+          const productName = slide.querySelector('h3');
+          if (productName) {
+            extractedText.push(productName.textContent.trim());
+          }
+          const price = slide.querySelector('.heading-h5');
+          if (price) {
+            extractedText.push(price.textContent.trim());
           }
         }
 
         extractedText.push('');
       });
 
-      return extractedText;
+      const formattedText = [];
+      for (let i = 0; i < extractedText.length; i += 4) {
+        if (extractedText[i] && extractedText[i + 1] && extractedText[i + 2] && extractedText[i + 3]) {
+          formattedText.push(`${extractedText[i]}\n${extractedText[i + 2]}\n${extractedText[i + 3]}\n${extractedText[i + 1]}\n`);
+        }
+      }
+
+      return formattedText;
     }
   </script>
 </body>
