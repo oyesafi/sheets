@@ -49,49 +49,32 @@
     async function parseHtml(html) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
+      const slides = doc.querySelectorAll('[aria-roledescription="slide"]');
       const extractedText = [];
 
-      // Extract src from images
-      const images = doc.getElementsByTagName('img');
-      Array.from(images).forEach(image => {
-        const srcText = image.getAttribute('src');
-        if (srcText) {
-          extractedText.push(`Src: ${srcText}`);
-        }
-      });
-
-      // Extract text from elements, ignoring certain classes
-      const elements = doc.querySelectorAll('span, h3');
-      Array.from(elements).forEach(element => {
-        if (!element.classList.contains('line-through') &&
-            !element.classList.contains('text-markaz-blue') &&
-            !element.classList.contains('text-[12px]') &&
-            !element.classList.contains('text-[10px]') &&
-            !element.classList.contains('text-primary font-medium') &&
-            !element.classList.contains('line-clamp-1')) {
-          const text = element.textContent;
-          if (text && text.trim()) {
-            extractedText.push(`${element.tagName}: ${text.trim()}`);
-          }
-        } else if (element.classList.contains('heading-h5')) {
-          const text = element.textContent;
-          if (text && text.trim()) {
-            extractedText.push(`${element.tagName}: ${text.trim()}`);
+     Array.from(slides).forEach(slide => {
+        const img = slide.querySelector('img');
+        if (img) {
+          const srcText = img.getAttribute('src');
+          if (srcText) {
+            extractedText.push(`<img  src="${srcText}">`);
           }
         }
-      });
 
-      // Extract href from links containing .app/product/
-      const links = doc.getElementsByTagName('a');
-      Array.from(links).forEach(link => {
-        const hrefText = link.getAttribute('href');
-        if (hrefText && hrefText.includes('')) {
-          extractedText.push(`Href: ${hrefText}`);
+        const a = slide.querySelector('a');
+        if (a) {
+          const hrefText = a.getAttribute('href');
+          if (hrefText) {
+            extractedText.push(`<a href="${hrefText}">`);
+          }
+          const aText = a.textContent.trim();
+          if (aText) {
+            extractedText.push(`<h2> Text: ${aText} </h2>`);
+          }
         }
-        const linkText = link.textContent;
-        if (linkText && linkText.trim()) {
-          extractedText.push(`A Text: ${linkText.trim()}`);
-        }
+
+          
+        extractedText.push('');
       });
 
       return extractedText;
