@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Text Extractor</title>
+  <title>Image Text Extractor</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,13 +18,11 @@
   </style>
 </head>
 <body>
-  <h1>Text Extractor</h1>
+  <h1>Image Text Extractor</h1>
   <form id="extractor-form">
     <label for="url">URL:</label>
-    <input type="text" id="url" name="url" size="50"><br><br>
-    <label for="class-name">Class Name:</label>
-    <input type="text" id="class-name" name="class-name"><br><br>
-    <button type="submit">Extract Text</button>
+    <input type="text" id="url" name="url" value="https://lite.markaz.app/dashboard"size="50"><br><br>
+    <button type="submit">Extract Image Text</button>
   </form>
   <textarea id="extracted-text" readonly></textarea>
 
@@ -33,21 +31,27 @@
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const url = document.getElementById('url').value;
-      const className = document.getElementById('class-name').value;
-      extractText(url, className);
+      extractImageText(url);
     });
 
-    function extractText(url, className) {
+    function extractImageText(url) {
       fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`)
         .then(response => response.text())
         .then(html => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, 'text/html');
-          const elements = doc.getElementsByClassName(className);
+          const images = doc.getElementsByTagName('img');
           const extractedText = [];
 
-          Array.from(elements).forEach(element => {
-            extractedText.push(element.textContent);
+          Array.from(images).forEach(image => {
+            const altText = image.getAttribute('src');
+            const titleText = image.getAttribute('title');
+            if (altText) {
+              extractedText.push(`Alt Text: ${altText}`);
+            }
+            if (titleText) {
+              extractedText.push(`Title Text: ${titleText}`);
+            }
           });
 
           const extractedTextDiv = document.getElementById('extracted-text');
