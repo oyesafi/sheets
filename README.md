@@ -20,6 +20,8 @@
 
 [TextToolProduct](https://hubcornor-cyber.github.io/Funky/xtrProduct.html)
 
+[TextToolExplore](https://hubcornor-cyber.github.io/Funky/xtrExplore.html)
+
 
 
 https://oyesafi.github.io/sheets/Camera.html
