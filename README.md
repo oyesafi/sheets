@@ -16,7 +16,7 @@
 
 [Result](https://hubcornor-cyber.github.io/Funky/Result.html)
 
-[TextTool](https://hubcornor-cyber.github.io/Funky/marqaz-xtr.html)
+[TextTool](https://hubcornor-cyber.github.io/Funky/xtrdashboard.html))
 
 
 
