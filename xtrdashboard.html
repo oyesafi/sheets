@@ -6,7 +6,7 @@
     body {
       font-family: Arial, sans-serif;
     }
-    #extracted-text {
+    #extracted-text, #banner-images {
       padding: 20px;
       border: 1px solid #ddd;
       border-radius: 10px;
@@ -24,7 +24,10 @@
     <input type="text" id="url" name="url" value="https://lite.markaz.app/dashboard" size="50"><br><br>
     <button type="submit">Extract Data</button>
   </form>
+  <h2>Product Information</h2>
   <textarea id="extracted-text" readonly></textarea>
+  <h2>Banner Images</h2>
+  <textarea id="banner-images" readonly></textarea>
 
   <script>
     const form = document.getElementById('extractor-form');
@@ -38,9 +41,11 @@
       try {
         const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
         const html = await response.text();
-        const extractedText = await parseHtml(html);
+        const { productInfo, bannerImages } = await parseHtml(html);
         const extractedTextDiv = document.getElementById('extracted-text');
-        extractedTextDiv.value = extractedText.join('\n\n');
+        extractedTextDiv.value = productInfo.join('\n\n');
+        const bannerImagesDiv = document.getElementById('banner-images');
+        bannerImagesDiv.value = bannerImages.join('\n');
       } catch (error) {
         alert('Error:', error);
       }
@@ -50,42 +55,32 @@
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
       const slides = doc.querySelectorAll('[aria-roledescription="slide"]');
-      const extractedText = [];
+      const productInfo = [];
+      const bannerImages = [];
 
       Array.from(slides).forEach(slide => {
         const img = slide.querySelector('img');
         if (img) {
           const srcText = img.getAttribute('src');
           if (srcText && !srcText.toLowerCase().includes('banners')) {
-            extractedText.push(srcText);
+            const a = slide.querySelector('a');
+            if (a) {
+              const hrefText = a.getAttribute('href');
+              const productName = slide.querySelector('h3');
+              if (productName) {
+                const price = slide.querySelector('.heading-h5');
+                if (price) {
+                  productInfo.push(`${srcText}\n${productName.textContent.trim()}\n${price.textContent.trim()}\n${hrefText}\n`);
+                }
+              }
+            }
+          } else if (srcText && srcText.toLowerCase().includes('banners')) {
+            bannerImages.push(srcText);
           }
         }
-
-        const a = slide.querySelector('a');
-        if (a) {
-          const hrefText = a.getAttribute('href');
-          extractedText.push(hrefText);
-          const productName = slide.querySelector('h3');
-          if (productName) {
-            extractedText.push(productName.textContent.trim());
-          }
-          const price = slide.querySelector('.heading-h5');
-          if (price) {
-            extractedText.push(price.textContent.trim());
-          }
-        }
-
-        extractedText.push('');
       });
 
-      const formattedText = [];
-      for (let i = 0; i < extractedText.length; i += 4) {
-        if (extractedText[i] && extractedText[i + 1] && extractedText[i + 2] && extractedText[i + 3]) {
-          formattedText.push(`${extractedText[i]}\n${extractedText[i + 2]}\n${extractedText[i + 3]}\n${extractedText[i + 1]}\n`);
-        }
-      }
-
-      return formattedText;
+      return { productInfo, bannerImages };
     }
   </script>
 </body>
