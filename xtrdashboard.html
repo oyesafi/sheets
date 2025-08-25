@@ -28,6 +28,18 @@
       height: 200px;
       overflow-y: auto;
     }
+    .btn {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -35,7 +47,7 @@
   <form id="extractor-form">
     <label for="url">URL:</label>
     <input type="text" id="url" name="url" value="https://lite.markaz.app/dashboard" size="50"><br><br>
-    <button type="submit">Extract Data</button>
+    <button type="submit" class="btn">Extract Data</button>
   </form>
   
   <h2>Product Information</h2>
@@ -50,11 +62,14 @@
     </thead>
     <tbody></tbody>
   </table>
+  <button id="copy-btn" class="btn">Copy Product Info (CSV)</button>
 
   <h2>Banner Images</h2>
   <textarea id="banner-images" readonly></textarea>
 
   <script>
+    let latestProductInfo = []; // store products globally
+
     const form = document.getElementById('extractor-form');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -68,17 +83,18 @@
         const html = await response.text();
         const { productInfo, bannerImages } = await parseHtml(html);
         
+        latestProductInfo = productInfo; // store latest product data
+
         // Fill product table
         const tableBody = document.querySelector('#product-table tbody');
         tableBody.innerHTML = '';
         productInfo.forEach(p => {
           const row = document.createElement('tr');
           row.innerHTML = `
-       
-            <td>${p.img}</td>
+            <td><img src="${p.img}" alt="Product" width="80"></td>
             <td>${p.name}</td>
             <td>${p.price}</td>
-            <td>${p.link}</td>
+            <td><a href="${p.link}" target="_blank">View</a></td>
           `;
           tableBody.appendChild(row);
         });
@@ -127,6 +143,34 @@
 
       return { productInfo, bannerImages };
     }
+
+    // Copy button functionality (CSV format)
+    document.getElementById('copy-btn').addEventListener('click', () => {
+      if (latestProductInfo.length === 0) {
+        alert("No product info to copy!");
+        return;
+      }
+
+      // Header row for CSV
+      let csvText = "Name,Price,Link,Image\n";
+
+      // Add rows
+      latestProductInfo.forEach(p => {
+        // Escape quotes and commas properly for CSV
+        const name = `"${p.name.replace(/"/g, '""')}"`;
+        const price = `"${p.price.replace(/"/g, '""')}"`;
+        const link = `"${p.link.replace(/"/g, '""')}"`;
+        const img = `"${p.img.replace(/"/g, '""')}"`;
+
+        csvText += `${name},${price},${link},${img}\n`;
+      });
+
+      navigator.clipboard.writeText(csvText).then(() => {
+        alert("✅ Product info copied in CSV format! Paste into Excel/Sheets.");
+      }).catch(err => {
+        alert("Failed to copy: " + err);
+      });
+    });
   </script>
 </body>
 </html>
