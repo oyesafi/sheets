@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Image Text Extractor</title>
+  <title>Data Extractor</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,11 +18,11 @@
   </style>
 </head>
 <body>
-  <h1>Image Text Extractor</h1>
+  <h1>Data Extractor</h1>
   <form id="extractor-form">
     <label for="url">URL:</label>
-    <input type="text" id="url" name="url" value="https://lite.markaz.app/dashboard"size="50"><br><br>
-    <button type="submit">Extract Image Text</button>
+    <input type="text" id="url" name="url" value="https://lite.markaz.app/dashboard" size="50"><br><br>
+    <button type="submit">Extract Data</button>
   </form>
   <textarea id="extracted-text" readonly></textarea>
 
@@ -31,33 +31,70 @@
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const url = document.getElementById('url').value;
-      extractImageText(url);
+      extractData(url);
     });
 
-    function extractImageText(url) {
-      fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`)
-        .then(response => response.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          const images = doc.getElementsByTagName('img');
-          const extractedText = [];
+    async function extractData(url) {
+      try {
+        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
+        const html = await response.text();
+        const extractedText = await parseHtml(html);
+        const extractedTextDiv = document.getElementById('extracted-text');
+        extractedTextDiv.value = extractedText.join('\n\n');
+      } catch (error) {
+        alert('Error:', error);
+      }
+    }
 
-          Array.from(images).forEach(image => {
-            const altText = image.getAttribute('src');
-            const titleText = image.getAttribute('title');
-            if (altText) {
-              extractedText.push(`Alt Text: ${altText}`);
-            }
-            if (titleText) {
-              extractedText.push(`Title Text: ${titleText}`);
-            }
-          });
+    async function parseHtml(html) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const extractedText = [];
 
-          const extractedTextDiv = document.getElementById('extracted-text');
-          extractedTextDiv.value = extractedText.join('\n\n');
-        })
-        .catch(error => alert('Error:', error));
+      // Extract src from images
+      const images = doc.getElementsByTagName('img');
+      Array.from(images).forEach(image => {
+        const srcText = image.getAttribute('src');
+        if (srcText) {
+          extractedText.push(`Src: ${srcText}`);
+        }
+      });
+
+      // Extract text from elements, ignoring certain classes
+      const elements = doc.querySelectorAll('span, h3');
+      Array.from(elements).forEach(element => {
+        if (!element.classList.contains('line-through') &&
+            !element.classList.contains('text-markaz-blue') &&
+            !element.classList.contains('text-[12px]') &&
+            !element.classList.contains('text-[10px]') &&
+            !element.classList.contains('text-primary font-medium') &&
+            !element.classList.contains('line-clamp-1')) {
+          const text = element.textContent;
+          if (text && text.trim()) {
+            extractedText.push(`${element.tagName}: ${text.trim()}`);
+          }
+        } else if (element.classList.contains('heading-h5')) {
+          const text = element.textContent;
+          if (text && text.trim()) {
+            extractedText.push(`${element.tagName}: ${text.trim()}`);
+          }
+        }
+      });
+
+      // Extract href from links containing .app/product/
+      const links = doc.getElementsByTagName('a');
+      Array.from(links).forEach(link => {
+        const hrefText = link.getAttribute('href');
+        if (hrefText && hrefText.includes('')) {
+          extractedText.push(`Href: ${hrefText}`);
+        }
+        const linkText = link.textContent;
+        if (linkText && linkText.trim()) {
+          extractedText.push(`A Text: ${linkText.trim()}`);
+        }
+      });
+
+      return extractedText;
     }
   </script>
 </body>
