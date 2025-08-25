@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Extract IMG, SPAN, and URLs (with 5s delay)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    h3 {
+      margin-top: 30px;
+      color: #333;
+    }
+    ul {
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 5px;
+      max-height: 300px;
+      overflow: auto;
+    }
+    li {
+      margin-bottom: 5px;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Extract Images, Spans, and Links from URL (with 5s Delay)</h2>
+    <input type="text" id="urlInput" placeholder="Enter URL (e.g. https://www.shop.markaz.app/explore/)">
+    <button onclick="startExtraction()">Extract</button>
+
+    <h3>Images:</h3>
+    <ul id="imgList"></ul>
+
+    <h3>Spans:</h3>
+    <ul id="spanList"></ul>
+
+    <h3>Links:</h3>
+    <ul id="linkList"></ul>
+  </div>
+
+  <script>
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function startExtraction() {
+      const imgList = document.getElementById('imgList');
+      const spanList = document.getElementById('spanList');
+      const linkList = document.getElementById('linkList');
+
+      imgList.innerHTML = '<li>Waiting 5 seconds before fetching...</li>';
+      spanList.innerHTML = '';
+      linkList.innerHTML = '';
+
+      await sleep(5000);
+      extractContent();
+    }
+
+    async function extractContent() {
+      const url = document.getElementById('urlInput').value;
+      const imgList = document.getElementById('imgList');
+      const spanList = document.getElementById('spanList');
+      const linkList = document.getElementById('linkList');
+
+      imgList.innerHTML = spanList.innerHTML = linkList.innerHTML = '<li>Fetching...</li>';
+
+      try {
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        const res = await fetch(proxyUrl);
+        const data = await res.json();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, 'text/html');
+
+        // Images
+        const imgs = [...doc.querySelectorAll('img')].map(img => img.src);
+        imgList.innerHTML = imgs.length
+          ? imgs.map(src => `<li><a href="${src}" target="_blank">${src}</a></li>`).join('')
+          : '<li>No images found</li>';
+
+        // Spans
+        const spans = [...doc.querySelectorAll('span')].map(span => span.textContent.trim()).filter(Boolean);
+        spanList.innerHTML = spans.length
+          ? spans.map(text => `<li>${text}</li>`).join('')
+          : '<li>No span elements found</li>';
+
+        // Links
+        const links = [...doc.querySelectorAll('a')].map(a => a.href);
+        linkList.innerHTML = links.length
+          ? links.map(href => `<li><a href="${href}" target="_blank">${href}</a></li>`).join('')
+          : '<li>No links found</li>';
+
+      } catch (error) {
+        imgList.innerHTML = `<li>Error: ${error}</li>`;
+        spanList.innerHTML = '';
+        linkList.innerHTML = '';
+      }
+    }
+  </script>
+</body>
+</html>
