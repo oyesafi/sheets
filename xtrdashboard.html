@@ -51,29 +51,38 @@
       const doc = parser.parseFromString(html, 'text/html');
       const slides = doc.querySelectorAll('[aria-roledescription="slide"]');
       const extractedText = [];
+      let ignoreNext = false;
 
-     Array.from(slides).forEach(slide => {
+      Array.from(slides).forEach(slide => {
+        if (ignoreNext) {
+          ignoreNext = false;
+          return;
+        }
+
         const img = slide.querySelector('img');
         if (img) {
           const srcText = img.getAttribute('src');
-          if (srcText) {
-            extractedText.push(`<img  src="${srcText}">`);
+          if (srcText && !srcText.toLowerCase().includes('banners')) {
+            extractedText.push(`Src: ${srcText}`);
           }
         }
 
         const a = slide.querySelector('a');
         if (a) {
           const hrefText = a.getAttribute('href');
-          if (hrefText) {
-            extractedText.push(`<a href="${hrefText}">`);
-          }
           const aText = a.textContent.trim();
-          if (aText) {
-            extractedText.push(`<h2> Text: ${aText} </h2>`);
+          if (aText.toLowerCase().includes('see all')) {
+            ignoreNext = true;
+          } else {
+            if (hrefText) {
+              extractedText.push(`Href: ${hrefText}`);
+            }
+            if (aText) {
+              extractedText.push(`A Text: ${aText}`);
+            }
           }
         }
 
-          
         extractedText.push('');
       });
 
